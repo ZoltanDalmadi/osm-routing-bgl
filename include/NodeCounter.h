@@ -1,3 +1,5 @@
+#pragma once
+
 #include <set>
 #include <osmium/visitor.hpp>
 #include <osmium/handler.hpp>
@@ -9,5 +11,6 @@
 struct NodeCounter : public osmium::handler::Handler
 {
   std::set<osmium::object_id_type> nodeSet;
+
   void way(const osmium::Way&);
 };
