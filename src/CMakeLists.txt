@@ -1,4 +1,5 @@
 ADD_EXECUTABLE(${PROJECT_NAME}
+    "NearestNode.cpp"
     "NodeCounter.cpp"
     "main.cpp")
 
