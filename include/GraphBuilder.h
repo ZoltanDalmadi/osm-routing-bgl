@@ -6,7 +6,6 @@
 #include <osmium/index/map/vector.hpp>
 typedef osmium::index::map::VectorBasedSparseMap<osmium::unsigned_object_id_type,
         osmium::Location, std::vector> index_type;
-
 #include <boost/graph/adjacency_list.hpp>
 
 struct VertexProperty
@@ -20,11 +19,10 @@ struct EdgeProperty
   double length;
 };
 
-typedef boost::adjacency_list
-<boost::listS, boost::vecS, boost::undirectedS, VertexProperty, EdgeProperty>
-Graph;
+typedef boost::adjacency_list <boost::listS, boost::vecS, boost::undirectedS,
+        VertexProperty, EdgeProperty> Graph;
 
-typedef boost::graph_traits <Graph>::vertex_descriptor Vertex;
+typedef boost::graph_traits<Graph>::vertex_descriptor Vertex;
 
 /*
  * Builds a graph from the buffer passed in the constructor.

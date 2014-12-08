@@ -1,3 +1,4 @@
+#include <osmium/geom/haversine.hpp>
 #include "GraphBuilder.h"
 
 GraphBuilder::GraphBuilder(const osmium::memory::Buffer& buffer,
@@ -16,8 +17,41 @@ GraphBuilder::GraphBuilder(const osmium::memory::Buffer& buffer,
 
 void GraphBuilder::way(const osmium::Way& way)
 {
+  const char *highway = way.tags()["highway"];
+
+  if (highway)
+  {
+    osmium::NodeRef prevNode;
+    Vertex u, v;
+
+    for (const auto& node : way.nodes())
+    {
+      if (prevNode.positive_ref())
+      {
+        auto VertexIters = boost::vertices(g);
+
+        for (auto it = VertexIters.first; it != VertexIters.second; ++it)
+        {
+          if (g[*it].id == node.positive_ref())
+          {
+            v = *it;
+            osmium::geom::Coordinates coord(locations.get(node.positive_ref()));
+            osmium::geom::Coordinates prev_coord(locations.get(prevNode.positive_ref()));
+
+            double d = osmium::geom::haversine::distance(coord, prev_coord);
+            auto edge = boost::add_edge(u, v, g);
+            g[edge.first].length = d;
+            break;
+          }
+        }
+      }
+
+      u = v;
+      prevNode = node;
+    }
+  }
+
   //  osmium::NodeRef prevref;
-  //  Vertex u, v;
 
   //  for (const osmium::NodeRef& actref : way.nodes())
   //  {
