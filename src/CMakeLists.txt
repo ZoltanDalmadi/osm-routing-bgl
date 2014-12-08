@@ -2,7 +2,9 @@ ADD_EXECUTABLE(${PROJECT_NAME}
     "GraphBuilder.cpp"
     "NearestNode.cpp"
     "NodeCounter.cpp"
-    "main.cpp")
+    "RoutePlanner.cpp"
+    "main.cpp"
+)
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME}
     PROPERTIES RUNTIME_OUTPUT_DIRECTORY
