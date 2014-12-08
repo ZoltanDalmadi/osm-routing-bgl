@@ -7,6 +7,6 @@ void NodeCounter::way(const osmium::Way& way)
   if (highway)
   {
     for (const auto& node : way.nodes())
-      nodeSet.emplace(node.ref());
+      nodeSet.emplace(node.positive_ref());
   }
 }

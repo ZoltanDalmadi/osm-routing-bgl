@@ -10,7 +10,7 @@
  */
 struct NodeCounter : public osmium::handler::Handler
 {
-  std::set<osmium::object_id_type> nodeSet;
+  std::set<osmium::unsigned_object_id_type> nodeSet;
 
   void way(const osmium::Way&);
 };
