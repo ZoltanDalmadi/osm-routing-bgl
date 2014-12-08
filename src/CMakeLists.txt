@@ -1,4 +1,5 @@
 ADD_EXECUTABLE(${PROJECT_NAME}
+    "GraphBuilder.cpp"
     "NearestNode.cpp"
     "NodeCounter.cpp"
     "main.cpp")
