@@ -1,14 +1,14 @@
 #include <iostream>
-
 #include <osmium/io/any_input.hpp>
+#include <osmium/index/map/vector.hpp>
+#include <osmium/handler/node_locations_for_ways.hpp>
 #include "NodeCounter.h"
 #include "NearestNode.h"
 #include "GraphBuilder.h"
-#include <osmium/index/map/vector.hpp>
+#include "RoutePlanner.h"
+
 typedef osmium::index::map::VectorBasedSparseMap<osmium::unsigned_object_id_type,
         osmium::Location, std::vector> index_type;
-
-#include <osmium/handler/node_locations_for_ways.hpp>
 typedef osmium::handler::NodeLocationsForWays<index_type> location_handler_type;
 
 int main(int argc, char *argv[])
@@ -36,11 +36,14 @@ int main(int argc, char *argv[])
   GraphBuilder graph_builder(buffer, index, node_counter.nodeSet);
   osmium::apply(buffer, graph_builder);
 
-  auto g = graph_builder.get_graph();
-  auto edgeIterators = boost::edges(g);
-  for (auto it = edgeIterators.first; it != edgeIterators.second; ++it)
+  osmium::Location start(21.5772, 47.5972);
+  osmium::Location dest(21.663412, 47.54988);
+
+  RoutePlanner route_planner(graph_builder, start, dest);
+
+  for (const auto& l : route_planner.get_route())
   {
-    std::cout << g[*it].length << std::endl;
+    std::cout << l.lat() << " " << l.lon() << std::endl;
   }
 
 }
