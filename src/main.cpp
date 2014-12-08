@@ -34,11 +34,13 @@ int main(int argc, char *argv[])
   osmium::apply(buffer, node_counter, location_handler);
 
   GraphBuilder graph_builder(buffer, index, node_counter.nodeSet);
+  osmium::apply(buffer, graph_builder);
+
   auto g = graph_builder.get_graph();
-  auto vertexIterators = boost::vertices(g);
-  for (auto it = vertexIterators.first; it != vertexIterators.second; ++it)
+  auto edgeIterators = boost::edges(g);
+  for (auto it = edgeIterators.first; it != edgeIterators.second; ++it)
   {
-    std::cout << "ID: " << g[*it].id << ", location: " << g[*it].loc << std::endl;
+    std::cout << g[*it].length << std::endl;
   }
 
 }
