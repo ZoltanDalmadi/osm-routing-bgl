@@ -3,6 +3,7 @@
 #include <osmium/io/any_input.hpp>
 #include "NodeCounter.h"
 #include "NearestNode.h"
+#include "GraphBuilder.h"
 #include <osmium/index/map/vector.hpp>
 typedef osmium::index::map::VectorBasedSparseMap<osmium::unsigned_object_id_type,
         osmium::Location, std::vector> index_type;
@@ -32,12 +33,12 @@ int main(int argc, char *argv[])
   NodeCounter node_counter;
   osmium::apply(buffer, node_counter, location_handler);
 
-  auto numOfNodes = node_counter.nodeSet.size();
-  std::cout << "Number of nodes: " << numOfNodes << std::endl;
+  GraphBuilder graph_builder(buffer, index, node_counter.nodeSet);
+  auto g = graph_builder.get_graph();
+  auto vertexIterators = boost::vertices(g);
+  for (auto it = vertexIterators.first; it != vertexIterators.second; ++it)
+  {
+    std::cout << "ID: " << g[*it].id << ", location: " << g[*it].loc << std::endl;
+  }
 
-  // nearestnode test
-  osmium::Location loc(21.42, 47.12);
-  NearestNode nearest_node(loc, index);
-  osmium::apply(buffer, nearest_node);
-  std::cout << nearest_node.get() << std::endl;
 }
