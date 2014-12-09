@@ -36,8 +36,8 @@ int main(int argc, char *argv[])
   GraphBuilder graph_builder(buffer, index, node_counter.nodeSet);
   osmium::apply(buffer, graph_builder);
 
-  osmium::Location start(21.5772, 47.5972);
-  osmium::Location dest(21.663412, 47.54988);
+  osmium::Location start(21.654696, 47.506214);
+  osmium::Location dest(21.641735, 47.542583);
 
   RoutePlanner route_planner(graph_builder, start, dest);
 
@@ -46,4 +46,10 @@ int main(int argc, char *argv[])
     std::cout << l.lat() << " " << l.lon() << std::endl;
   }
 
+  double sum_distance = 0.0f;
+
+  for (const auto& d : route_planner.get_distances())
+    sum_distance += d;
+
+  std::cout << "total distance: " << sum_distance / 1000 << " km" << std::endl;
 }
