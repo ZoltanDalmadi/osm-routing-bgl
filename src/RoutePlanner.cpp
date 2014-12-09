@@ -1,3 +1,4 @@
+#include <osmium/geom/haversine.hpp>
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include "RoutePlanner.h"
 
@@ -26,12 +27,29 @@ RoutePlanner::RoutePlanner(const GraphBuilder& gb,
 
   if (destVertex != predecessors[destVertex])
   {
-    for (auto v = destVertex; v != startVertex; v = predecessors[v])
-      route.push_back(graph[v].loc);
+    Vertex u = destVertex;
 
-    route.push_back(graph[startVertex].loc);
+    for (auto v = destVertex; v != startVertex; v = predecessors[v])
+    {
+      route.emplace_back(graph[v].loc);
+
+      if (u != destVertex)
+      {
+        osmium::geom::Coordinates coord(graph[v].loc);
+        osmium::geom::Coordinates prev_coord(graph[u].loc);
+
+        double d = osmium::geom::haversine::distance(coord, prev_coord);
+        distances.emplace_back(d);
+      }
+      u = v;
+    }
+
+    route.emplace_back(graph[startVertex].loc);
+    distances.emplace_back(osmium::geom::haversine::distance(
+                             graph[startVertex].loc, graph[u].loc));
 
     std::reverse(route.begin(), route.end());
+    std::reverse(distances.begin(), distances.end());
   }
   else
     std::cout << "Route not found" << std::endl;
