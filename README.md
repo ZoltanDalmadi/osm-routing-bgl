@@ -1,5 +1,11 @@
 # OSM Routing with Boost Graph Library
 
+## Prerequisites
+
+[boost-graph](http://www.boost.org/)
+
+[libosmium](http://osmcode.org/libosmium/)
+
 ### Build
 
     $ mkdir build
