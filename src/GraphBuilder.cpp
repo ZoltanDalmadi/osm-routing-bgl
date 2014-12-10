@@ -18,31 +18,26 @@ GraphBuilder::GraphBuilder(const osmium::memory::Buffer& buffer,
 
 void GraphBuilder::way(const osmium::Way& way)
 {
-  const char *highway = way.tags()["highway"];
+  osmium::NodeRef prevNode;
+  Vertex u = 0;
+  Vertex v = 0;
 
-  if (highway)
+  for (const auto& node : way.nodes())
   {
-    osmium::NodeRef prevNode;
-    Vertex u = 0;
-    Vertex v = 0;
+    v = vertexMap.at(node.positive_ref());
 
-    for (const auto& node : way.nodes())
+    if (prevNode.positive_ref())
     {
       v = vertexMap.at(node.positive_ref());
+      osmium::geom::Coordinates coord(locations.get(node.positive_ref()));
+      osmium::geom::Coordinates prev_coord(locations.get(prevNode.positive_ref()));
 
-      if (prevNode.positive_ref())
-      {
-        v = vertexMap.at(node.positive_ref());
-        osmium::geom::Coordinates coord(locations.get(node.positive_ref()));
-        osmium::geom::Coordinates prev_coord(locations.get(prevNode.positive_ref()));
-
-        double d = osmium::geom::haversine::distance(coord, prev_coord);
-        auto edge = boost::add_edge(u, v, g);
-        g[edge.first].length = d;
-      }
-
-      u = v;
-      prevNode = node;
+      double d = osmium::geom::haversine::distance(coord, prev_coord);
+      auto edge = boost::add_edge(u, v, g);
+      g[edge.first].length = d;
     }
+
+    u = v;
+    prevNode = node;
   }
 }
