@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 #include <osmium/io/any_input.hpp>
 #include <osmium/index/map/vector.hpp>
 #include <osmium/handler/node_locations_for_ways.hpp>
@@ -14,9 +15,10 @@ typedef osmium::handler::NodeLocationsForWays<index_type> location_handler_type;
 int main(int argc, char *argv[])
 {
   // Print usage
-  if (argc != 2)
+  if (argc != 6)
   {
-    std::cerr << "Usage: " << argv[0] << " OSMFILE\n";
+    std::cerr << "Usage: " << argv[0] <<
+              " OSMFILE start_lat start_lon dest_lat dest_lon" << std::cout;
     exit(1);
   }
 
@@ -36,8 +38,8 @@ int main(int argc, char *argv[])
   GraphBuilder graph_builder(buffer, index, node_counter.nodeSet);
   osmium::apply(buffer, graph_builder);
 
-  osmium::Location start(21.654696, 47.506214);
-  osmium::Location dest(21.641735, 47.542583);
+  osmium::Location start(std::atof(argv[3]), std::atof(argv[2]));
+  osmium::Location dest(std::atof(argv[5]), std::atof(argv[4]));
 
   RoutePlanner route_planner(graph_builder, start, dest);
 
@@ -51,5 +53,5 @@ int main(int argc, char *argv[])
   for (const auto& d : route_planner.get_distances())
     sum_distance += d;
 
-  std::cout << "total distance: " << sum_distance / 1000 << " km" << std::endl;
+  // std::cout << "total distance: " << sum_distance / 1000 << " km" << std::endl;
 }
