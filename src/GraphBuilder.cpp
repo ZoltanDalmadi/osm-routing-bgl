@@ -22,6 +22,7 @@ void GraphBuilder::way(const osmium::Way& way)
   Vertex u = 0;
   Vertex v = 0;
 
+  // add edges to graph
   for (const auto& node : way.nodes())
   {
     v = vertexMap.at(node.positive_ref());
